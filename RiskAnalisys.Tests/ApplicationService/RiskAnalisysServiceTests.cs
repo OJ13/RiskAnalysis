@@ -73,4 +73,32 @@ public class RiskAnalisysServiceTests
         // Processing time should be non-negative
         Assert.True(result.ProcessingTimeMS >= 0);
     }
+
+    [Fact]
+    public void ClassifyRisk_WithNegativeValue_ShouldThrowInvalidOperationException()
+    {
+        // Arrange
+        var requests = new[] {
+            new ClassifyRiskRequestDTO(-100m, ClientSector.PRIVATE),
+            new ClassifyRiskRequestDTO(500000m, ClientSector.PRIVATE)
+        };
+
+        // Act & Assert
+        var ex = Assert.Throws<InvalidOperationException>(() => _service.ClassifyRisk(requests));
+        Assert.Contains("negativos", ex.Message);
+    }
+
+    [Fact]
+    public void DistributionRisk_WithNegativeValue_ShouldThrowInvalidOperationException()
+    {
+        // Arrange
+        var requests = new[] {
+            new DistributionRiskRequestDTO(-100m, ClientSector.PRIVATE, "ClientA"),
+            new DistributionRiskRequestDTO(500000m, ClientSector.PRIVATE, "ClientB")
+        };
+
+        // Act & Assert
+        var ex = Assert.Throws<InvalidOperationException>(() => _service.DistributionRisk(requests));
+        Assert.Contains("negativos", ex.Message);
+    }
 }

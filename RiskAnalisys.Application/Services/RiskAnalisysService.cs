@@ -2,6 +2,7 @@
 using RiskAnalisys.Application.DTO.Requests;
 using RiskAnalisys.Application.DTO.Responses;
 using RiskAnalisys.Domain.Entities;
+using RiskAnalisys.Domain.Enums;
 using RiskAnalisys.Domain.Structs;
 using System.Collections.Concurrent;
 using System.Diagnostics;
@@ -19,10 +20,12 @@ public class RiskAnalisysService : IRiskAnalisysService
     {
         _logger.LogInformation("Iniciando processamento de {Length} trades", request.Length);
 
+        ValidateRequest(request.Select(p => p.Value));
+
         var response = request
                         .AsParallel()
                         .AsOrdered()
-                        .Select(p => Classification(p)).ToArray();
+                        .Select(p => GetClassification(p.Value, p.ClientSector)).ToArray();
 
         _logger.LogInformation("Classificação concluída.");
 
@@ -31,8 +34,9 @@ public class RiskAnalisysService : IRiskAnalisysService
 
     public DistribuitionCalculatedDTO DistributionRisk(DistributionRiskRequestDTO[] request)
     {
-        var processingTimeMS = Stopwatch.StartNew();
         _logger.LogInformation("Iniciando processamento de {Length} trades", request.Length);
+
+        ValidateRequest(request.Select(p => p.Value));
 
         var resume = new ConcurrentDictionary<string, TradeMetrics>();
         
@@ -41,7 +45,7 @@ public class RiskAnalisysService : IRiskAnalisysService
                                 .AsOrdered()
                                 .Select(p => 
         {
-            var category = Classification(p);
+            var category = GetClassification(p.Value, p.ClientSector);
 
             resume.AddOrUpdate(category,
                 (_) =>
@@ -59,8 +63,6 @@ public class RiskAnalisysService : IRiskAnalisysService
             return category;
         }).ToArray();
 
-        processingTimeMS.Stop();
-
         _logger.LogInformation("Relatorio distribuido concluido.");
 
         return new DistribuitionCalculatedDTO(
@@ -69,15 +71,15 @@ public class RiskAnalisysService : IRiskAnalisysService
             );
     }
 
-    private string Classification(ClassifyRiskRequestDTO dto)
+    private string GetClassification(decimal value, ClientSector sector)
     {
-        var trade = new Trade { Value = dto.Value, ClientSector = dto.ClientSector };
+        var trade = new Trade { Value = value, ClientSector = sector };
         return trade.ClassifyRisk().ToString();
     }
 
-    private string Classification(DistributionRiskRequestDTO dto)
+    private void ValidateRequest(IEnumerable<decimal> values)
     {
-        var trade = new Trade { Value = dto.Value, ClientSector = dto.ClientSector };
-        return trade.ClassifyRisk().ToString();
+        if (values.Any(v => v < 0))
+            throw new InvalidOperationException("A lista contém trades com valores negativos.");
     }
 }
