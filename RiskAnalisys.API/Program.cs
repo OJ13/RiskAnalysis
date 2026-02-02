@@ -3,6 +3,10 @@ using RiskAnalisys.API.Middleware;
 using RiskAnalisys.Application.DI;
 using RiskAnalisys.Application.Serialization;
 using System.Text.Json.Serialization;
+using OpenTelemetry.Logs;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,8 +33,29 @@ builder.Services.AddDIApplication();
 
 #endregion
 
-# region
+# region OpenTelemetry Configuration
 
+const string serviceName = "risk-analisys";
+
+builder.Logging.AddOpenTelemetry(options =>
+{
+    options
+        .SetResourceBuilder(
+            ResourceBuilder.CreateDefault()
+                .AddService(serviceName))
+            .AddConsoleExporter()
+            .AddOtlpExporter();
+});
+
+builder.Services.AddOpenTelemetry()
+      .ConfigureResource(resource => resource.AddService(serviceName))
+      .WithTracing(tracing => tracing
+          .AddAspNetCoreInstrumentation()
+          .AddConsoleExporter())
+      .WithMetrics(metrics => metrics
+          .AddAspNetCoreInstrumentation()
+          .AddRuntimeInstrumentation()
+          .AddConsoleExporter());
 # endregion
 
 # region Middlewares
