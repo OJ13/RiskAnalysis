@@ -42,7 +42,6 @@ Lista das principais bibliotecas usadas (conforme os arquivos `.csproj`):
 - **RiskAnalisys.API**
   - `Swashbuckle.AspNetCore` — gera a documentação Swagger/OpenAPI da API.
   - `Newtonsoft.Json` — serialização JSON (configurações ou compatibilidade).
-  - `Microsoft.VisualStudio.Azure.Containers.Tools.Targets` — suporte para Docker/containers durante desenvolvimento.
 
 - **RiskAnalisys.Application**
   - `Microsoft.AspNetCore.Mvc.Core` — abstrações usadas pela camada de aplicação.
@@ -92,7 +91,93 @@ A documentação interativa (Swagger) está disponível quando a aplicação est
 - Acesse `https://localhost:5001/swagger` ou `http://localhost:5000/swagger` (dependendo do comportamento do Kestrel/HTTPs no ambiente).
 - Use o Swagger UI para enviar requisições de teste e ver exemplos de payloads e respostas.
 
-> Dica: o endpoint de classificação aceita um DTO com os dados do trade — ver os DTOs em `RiskAnalisys.Application/DTO/Requests` para o formato esperado.
+### Exemplos de Requisições
+
+#### POST `/risk-analisys/classify`
+Classifica uma lista de trades conforme seu risco.
+
+**Request Body:**
+```json
+[
+  {
+    "value": 150000.50,
+    "clientSector": "Technology"
+  },
+  {
+    "value": 50000.00,
+    "clientSector": "Finance"
+  },
+  {
+    "value": 500000.00,
+    "clientSector": "Healthcare"
+  }
+]
+```
+
+**Response (200 OK):**
+```json
+{
+  "categories": [
+    "HIGHRISK",
+    "LOWRISK",
+    "LOWRISK",
+    "MEDIUMRISK"
+  ],
+  "processingTimeMS": 29
+}
+```
+
+#### POST `/risk-analisys/distribution`
+Analisa trades com informações adicionais do cliente.
+
+**Request Body:**
+```json
+[
+  {
+    "value": 250000.00,
+    "clientSector": "Technology",
+    "client": "TechCorp Inc"
+  },
+  {
+    "value": 75000.00,
+    "clientSector": "Retail",
+    "client": "ShopMart Ltd"
+  }
+]
+```
+
+**Response (200 OK):**
+```json
+{
+  "categories": [
+    "LOWRISK",
+    "LOWRISK",
+    "LOWRISK",
+    "LOWRISK",
+    "HIGHRISK",
+    "MEDIUMRISK"
+  ],
+  "summary": {
+    "MEDIUMRISK": {
+      "count": 1,
+      "totalValue": 1000000,
+      "topClient": "Teste1"
+    },
+    "LOWRISK": {
+      "count": 4,
+      "totalValue": 45,
+      "topClient": "teste2"
+    },
+    "HIGHRISK": {
+      "count": 1,
+      "totalValue": 5000000,
+      "topClient": "Teste3"
+    }
+  },
+  "processingTimeMS": 134
+}
+```
+
 
 ---
 
@@ -104,7 +189,3 @@ A documentação interativa (Swagger) está disponível quando a aplicação est
   - Documentar convenções de código e padrões de projeto usados
 
 ---
-
-**Contato / Contribuição**
-- Para contribuir: abra uma issue ou um pull request seguindo o padrão do repositório.
-- Autor: repositório base do desafio (ver histórico do Git).

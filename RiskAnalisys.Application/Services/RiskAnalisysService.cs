@@ -35,11 +35,13 @@ public class RiskAnalisysService : IRiskAnalisysService
         _logger.LogInformation("Iniciando processamento de {Length} trades", request.Length);
 
         var resume = new ConcurrentDictionary<string, TradeMetrics>();
-        List<string> categorias = [];
-        request.AsParallel().ForAll(p =>
+        
+        string[] categorias = request
+                                .AsParallel()
+                                .AsOrdered()
+                                .Select(p => 
         {
             var category = Classification(p);
-            categorias.Add(category);
 
             resume.AddOrUpdate(category,
                 (_) =>
@@ -54,16 +56,16 @@ public class RiskAnalisysService : IRiskAnalisysService
                     return existis;
                 }
                 );
-        });
+            return category;
+        }).ToArray();
 
         processingTimeMS.Stop();
 
         _logger.LogInformation("Relatorio distribuido concluido.");
 
         return new DistribuitionCalculatedDTO(
-            Categories: categorias.ToArray(),
-            Summary: resume.ToDictionary(k => k.Key, v => v.Value),
-            ProcessingTimeMS: 0
+            Categories: categorias,
+            Summary: resume.ToDictionary(k => k.Key, v => v.Value)
             );
     }
 

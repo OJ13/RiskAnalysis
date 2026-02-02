@@ -21,28 +21,46 @@ namespace RiskAnalisys.API.Controllers
         [HttpPost("classify")]
         public async Task<IActionResult> Classify(ClassifyRiskRequestDTO[] request)
         {
+            var sw = Stopwatch.StartNew();
+
             if (request is null || request.Length == 0)
                 return BadRequest("Requisição Inválida - dados não encontrados");
 
 
             var response = _riskAnalisysService.ClassifyRisk(request);
 
-            ActivityTelemetry(request, response);
+            sw.Stop();
 
-            return Ok(response);
+            var result = response with
+            {
+                ProcessingTimeMS = sw.ElapsedMilliseconds
+            };
+
+            ActivityTelemetry(request, result);
+
+            return Ok(result);
         }
 
         [HttpPost("distribution")]
         public async Task<IActionResult> Distribution(DistributionRiskRequestDTO[] request)
         {
+            var sw = Stopwatch.StartNew();
+
             if (request is null || request.Length == 0)
                 return BadRequest("Requisição Inválida - dados não encontrados");
 
             var response = _riskAnalisysService.DistributionRisk(request);
 
-            ActivityTelemetry(request, response);
+            sw.Stop();
 
-            return Ok(response);
+            var result = response with
+            {
+                ProcessingTimeMS = sw.ElapsedMilliseconds
+            };
+
+            ActivityTelemetry(request, result);
+
+            return Ok(result);
         }
 
         private void ActivityTelemetry<T>(T payload, object response)

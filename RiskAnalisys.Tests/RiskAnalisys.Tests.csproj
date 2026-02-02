@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RiskAnalisys.Domain\RiskAnalisys.Domain.csproj" />
+    <ProjectReference Include="..\RiskAnalisys.Application\RiskAnalisys.Application.csproj" />
   </ItemGroup>
 
 </Project>
