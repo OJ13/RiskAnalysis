@@ -25,4 +25,8 @@
     <ProjectReference Include="..\RiskAnalisys.Infrastructure\RiskAnalisys.Infrastructure.csproj" />
   </ItemGroup>
 
+	<ItemGroup>
+		<InternalsVisibleTo Include="RiskAnalisys.Tests.IntegrationTests" />
+	</ItemGroup>
+
 </Project>

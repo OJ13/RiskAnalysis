@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36518.9 d17.14
+VisualStudioVersion = 17.14.36518.9
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RiskAnalisys.API", "RiskAnalisys.API\RiskAnalisys.API.csproj", "{DB8D85E5-E435-4614-AB50-2E54F80DA86A}"
 EndProject
@@ -12,6 +12,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RiskAnalisys.Infrastructure", "RiskAnalisys.Infrastructure\RiskAnalisys.Infrastructure.csproj", "{71F4699B-8F1C-47F9-B5E9-F93FA28BCACD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RiskAnalisys.Tests", "RiskAnalisys.Tests\RiskAnalisys.Tests.csproj", "{0ED2AAEA-19AA-4BDF-8CC1-778446CBD3EE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RiskAnalisys.Tests.IntegrationTests", "RiskAnalisys.Tests.IntegrationTests\RiskAnalisys.Tests.IntegrationTests.csproj", "{2CCDB934-BD49-43BC-AC61-AD078EC4013D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{0ED2AAEA-19AA-4BDF-8CC1-778446CBD3EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0ED2AAEA-19AA-4BDF-8CC1-778446CBD3EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0ED2AAEA-19AA-4BDF-8CC1-778446CBD3EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2CCDB934-BD49-43BC-AC61-AD078EC4013D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2CCDB934-BD49-43BC-AC61-AD078EC4013D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2CCDB934-BD49-43BC-AC61-AD078EC4013D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2CCDB934-BD49-43BC-AC61-AD078EC4013D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

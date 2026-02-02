@@ -12,8 +12,6 @@
 ## Visão Geral 💡
 Este repositório implementa um pequeno serviço para análise de risco de trades (operações financeiras). O objetivo principal é receber informações sobre trades, aplicar regras de negócio para classificá-los em categorias de risco e retornar o resultado. O projeto foi organizado em camadas para separar responsabilidade, facilitar testes e manter o código claro.
 
-> Nota: Este README explica cada tópico existente no template original e dá instruções para executar, testar e entender a arquitetura do projeto.
-
 ---
 
 ## Arquitetura e Camadas 🔧
@@ -34,20 +32,58 @@ O código está dividido em projetos por responsabilidade (clean architecture / 
 - **RiskAnalisys.Infrastructure (Persistência / Infra)**
   - Código relacionado à infraestrutura (por exemplo, persistência, adaptações). No projeto atual a pasta existe para manter separação e facilitar evolução futura.
 
+### Projetos de Teste ✅
+- **RiskAnalisys.Tests (Testes Unitários)**
+  - Focado em testes unitários de serviços e componentes do domínio (ex.: `RiskAnalisysService`, `Trade`), garantindo regras de negócio isoladas.
+  - Tecnologias utilizadas: `xUnit`, `Moq` e `coverlet` para cobertura de testes. Esses testes são rápidos e não dependem de infraestrutura externa.
+  - Execução: `dotnet test RiskAnalisys.Tests`.
+
+- **RiskAnalisys.Tests.IntegrationTests (Testes de Integração)**
+  - Focado em testes de ponta a ponta contra a aplicação hospedada em memória (TestServer / `WebApplicationFactory`). Cobre controllers, middlewares e integração entre camadas.
+  - Tecnologias utilizadas: `xUnit`, `FluentAssertions` e `Microsoft.AspNetCore.Mvc.Testing`.
+  - Execução: `dotnet test RiskAnalisys.Tests.IntegrationTests`.
+
 ---
 
 ## Dependências Instaladas 📦
-Lista das principais bibliotecas usadas (conforme os arquivos `.csproj`):
+Lista das bibliotecas usadas por projeto (versões conforme `*.csproj`):
 
 - **RiskAnalisys.API**
-  - `Swashbuckle.AspNetCore` — gera a documentação Swagger/OpenAPI da API.
-  - `Newtonsoft.Json` — serialização JSON (configurações ou compatibilidade).
+  - `Microsoft.VisualStudio.Azure.Containers.Tools.Targets` — ferramentas para integração com containers (1.22.1)
+  - `Newtonsoft.Json` — serialização JSON e compatibilidade (13.0.4)
+  - `OpenTelemetry` — observabilidade básica (1.15.0)
+  - `OpenTelemetry.Exporter.Console` — exportador Console (1.15.0)
+  - `OpenTelemetry.Exporter.OpenTelemetryProtocol` — protocolo OTLP (1.15.0)
+  - `OpenTelemetry.Extensions.Hosting` — integração com hosted services (1.15.0)
+  - `OpenTelemetry.Instrumentation.AspNetCore` — instrumentação ASP.NET Core (1.15.0)
+  - `OpenTelemetry.Instrumentation.Runtime` — instrumentação de runtime (1.15.0)
+  - `Swashbuckle.AspNetCore` — Swagger / OpenAPI (10.1.0)
 
 - **RiskAnalisys.Application**
-  - `Microsoft.AspNetCore.Mvc.Core` — abstrações usadas pela camada de aplicação.
-  - `Microsoft.Extensions.DependencyInjection.Abstractions` e `Microsoft.Extensions.Logging.Abstractions` — injeção de dependência e logging.
+  - `Microsoft.AspNetCore.Mvc.Core` — abstrações MVC (2.3.9)
+  - `Microsoft.Extensions.DependencyInjection.Abstractions` — DI (10.0.2)
+  - `Microsoft.Extensions.Logging.Abstractions` — logging (10.0.2)
 
-> Observação: para ver versões exatas e mudar dependências, verifique os arquivos `*.csproj` em cada projeto.
+- **RiskAnalisys.Domain**
+  - Projeto apenas com modelos (sem pacotes externos listados).
+
+- **RiskAnalisys.Infrastructure**
+  - Projeto preparado para infra (sem pacotes externos listados atualmente).
+
+- **RiskAnalisys.Tests (Unit Tests)**
+  - `coverlet.collector` — coleta de cobertura (6.0.0)
+  - `Microsoft.NET.Test.Sdk` — runner de teste (17.8.0)
+  - `xunit` / `xunit.runner.visualstudio` — framework de teste (2.5.3)
+  - `Moq` — mocks e stubs para testes unitários (4.20.70)
+
+- **RiskAnalisys.Tests.IntegrationTests (Integration Tests)**
+  - `coverlet.collector` — coleta de cobertura (6.0.0)
+  - `FluentAssertions` — assertions legíveis (8.8.0)
+  - `Microsoft.AspNetCore.Mvc.Testing` — WebApplicationFactory / TestServer (8.0.23)
+  - `Microsoft.NET.Test.Sdk` — runner de teste (17.8.0)
+  - `xunit` / `xunit.runner.visualstudio` — framework de teste (2.5.3)
+
+> Para ver e ajustar versões exatas, consulte os arquivos de projeto `*.csproj` na raiz de cada projeto.
 
 ---
 
@@ -93,7 +129,7 @@ A documentação interativa (Swagger) está disponível quando a aplicação est
 
 ### Exemplos de Requisições
 
-#### POST `/risk-analisys/classify`
+#### POST `api/risk-analisys/classify`
 Classifica uma lista de trades conforme seu risco.
 
 **Request Body:**
@@ -127,7 +163,7 @@ Classifica uma lista de trades conforme seu risco.
 }
 ```
 
-#### POST `/risk-analisys/distribution`
+#### POST `api/risk-analisys/distribution`
 Analisa trades com informações adicionais do cliente.
 
 **Request Body:**
@@ -187,5 +223,6 @@ Analisa trades com informações adicionais do cliente.
   - Adicionar exemplos de requisições para os endpoints no README ✅
   - Incluir badges (build, coverage) ou instruções de CI/CD
   - Documentar convenções de código e padrões de projeto usados
-
+  - Criacao de Testes unitarios junto com IA
+  
 ---

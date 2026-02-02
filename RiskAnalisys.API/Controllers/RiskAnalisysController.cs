@@ -6,7 +6,7 @@ using System.Diagnostics;
 
 namespace RiskAnalisys.API.Controllers
 {
-    [Route("risk-analisys")]
+    [Route("api/risk-analisys")]
     [ApiController]
     public class RiskAnalisysController : ControllerBase
     {
@@ -18,6 +18,11 @@ namespace RiskAnalisys.API.Controllers
             _logger = logger;
         }
 
+        /// <summary>
+        /// Endopoint para classificar o risco de um conjunto de operações comerciais.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>Retorna o resultado da classificação de risco</returns>
         [HttpPost("classify")]
         public async Task<IActionResult> Classify(ClassifyRiskRequestDTO[] request)
         {
@@ -41,6 +46,11 @@ namespace RiskAnalisys.API.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Endpoint para trazer resumo de operações comerciais por distribuição de risco.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>Retorna o resultado da distribuição de risco</returns>
         [HttpPost("distribution")]
         public async Task<IActionResult> Distribution(DistributionRiskRequestDTO[] request)
         {
