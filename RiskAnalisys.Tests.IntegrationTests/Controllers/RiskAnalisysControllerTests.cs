@@ -33,7 +33,7 @@ public class RiskAnalisysControllerTests
     }
 
     [Fact]
-    public async Task PostClassify_Returns500Erro()
+    public async Task PostClassify_Returns400Erro()
     {
         // Arrange
         var application = new RiskAnalisysWebApplicationFactory();
@@ -52,7 +52,7 @@ public class RiskAnalisysControllerTests
         // Act
         var response = await client.PostAsync($"{BaseUrl}/classify", body);
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
     
 
@@ -79,7 +79,7 @@ public class RiskAnalisysControllerTests
     }
 
     [Fact]
-    public async Task PostDistribution_Returns500Erro()
+    public async Task PostDistribution_Returns400Erro()
     {
         // Arrange
         var application = new RiskAnalisysWebApplicationFactory();
@@ -97,7 +97,7 @@ public class RiskAnalisysControllerTests
         // Act
         var response = await client.PostAsync($"{BaseUrl}/classify", body);
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
 }

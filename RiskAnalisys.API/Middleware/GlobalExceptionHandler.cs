@@ -16,11 +16,11 @@ namespace RiskAnalisys.API.Middleware
         {
             _logger.LogError(exception, "Ocorreu um erro não tratado: {Message}", exception.Message);
 
-            var (statusCode, title) = exception switch
+            var (statusCode, title, message) = exception switch
              {
-                 InvalidOperationException => (StatusCodes.Status400BadRequest, "Operação Inválida"),
-                 UnauthorizedAccessException => (StatusCodes.Status401Unauthorized, "Não Autorizado"),
-                 _ => (StatusCodes.Status500InternalServerError, "Erro Interno")
+                 InvalidOperationException or { InnerException: InvalidOperationException } => (StatusCodes.Status400BadRequest, "Operação Inválida", exception.Message),
+                 UnauthorizedAccessException or { InnerException: UnauthorizedAccessException } => (StatusCodes.Status401Unauthorized, "Não Autorizado", "Sem aautorizacao para acessar recurso"),
+                 _ => (StatusCodes.Status500InternalServerError, "Erro Interno", "Mais detalhes dos erros nos logs")
              };
 
             httpContext.Response.StatusCode = statusCode;
@@ -29,7 +29,7 @@ namespace RiskAnalisys.API.Middleware
             {
                 Status = statusCode,
                 Title = title,
-                Detail = "Mais detalhes dos erros nos logs"
+                Detail = message
             }, cancellationToken);
 
             return true;
